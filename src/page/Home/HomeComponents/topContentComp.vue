@@ -30,13 +30,13 @@
             <template #prevArrow>
               <div class="custom-slick-arrow"
                 style="left: 0px;border-top-right-radius: 50%;border-bottom-right-radius: 50%;z-index: 1">
-                <left-circle-outlined />
+                &lt;
               </div>
             </template>
             <template #nextArrow>
               <div class="custom-slick-arrow"
                 style="right: 0px;border-top-left-radius: 50%;border-bottom-left-radius: 50%;">
-                <right-circle-outlined />
+                &gt;
               </div>
             </template>
             <!-- 要轮播的图 -->
@@ -54,7 +54,9 @@
             </div>
           </a-carousel>
         </li>
-        <li class="user_box"></li>
+        <li class="user_box">
+          <userInfoCompVue />
+        </li>
       </ul>
     </li>
   </ul>
@@ -65,6 +67,9 @@
 import './icon/alibaba/icon.css'
 import { markRaw } from "@vue/reactivity";
 import { LeftCircleOutlined, RightCircleOutlined } from '@ant-design/icons-vue';
+// 组件导入
+import userInfoCompVue from './userInfoComp.vue';
+
 
 // 分类列表数据类型限制
 interface goodsClassifyType {
@@ -279,6 +284,7 @@ const topNavList = markRaw<topNavType[]>([
       padding: 0;
       margin: 10px 0 0 0;
       list-style-type: none;
+      display: flex;
 
       // 轮播图盒子
       .shuffling_box {
@@ -308,12 +314,15 @@ const topNavList = markRaw<topNavType[]>([
           opacity: 0;
           color: #fff;
           font-size: 20px;
+          line-height: 25px;
+          text-align: center;
         }
 
         // 默认箭头隐藏
         .ant-carousel :deep(.custom-slick-arrow:before) {
           display: none;
         }
+
       }
 
       // 当移入轮播图时，箭头显示

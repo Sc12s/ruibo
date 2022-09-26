@@ -22,7 +22,7 @@ import TopContextComp from './HomeComponents/topContentComp.vue';
 <style lang="less" scoped>
 .container {
     background-image: linear-gradient(to left, #ecf5ff, #fef0f0);
-
+    min-width: 1200px;
     .main_content_box {
         width: 1200px;
         margin: auto;
