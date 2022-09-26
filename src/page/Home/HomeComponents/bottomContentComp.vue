@@ -9,7 +9,9 @@
 
 <style lang="less" scoped>
     .bottom_content_box {
-        width: 1000px;
+        width: 100%;
         height: 200px;
+        margin-top: 50px;
+        background: #fff;
     }
 </style>
