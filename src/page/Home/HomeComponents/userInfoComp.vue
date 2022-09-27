@@ -11,7 +11,7 @@
     </li>
     <!-- 按钮 -->
     <li>
-      <router-link to="/">登录</router-link>
+      <router-link to="/loginPage">登录</router-link>
       <router-link to="/">注册</router-link>
       <router-link to="/">开店</router-link>
     </li>
