@@ -48,11 +48,11 @@ window.onscroll = (): void => {
     // 获取元素
     const dom = document.documentElement || document.body
     // 获取当前可视区域的内容高度
-    const clientHeight = dom.clientHeight;
+    const clientHeight: number = dom.clientHeight;
     // 滚动条在Y轴上的滚动距离
-    const scrollTop = dom.scrollTop;
+    const scrollTop: number = dom.scrollTop;
     // 内容可视区域的高度加上溢出（滚动）的距离
-    const scrollHeight = dom.scrollHeight;
+    const scrollHeight: number = dom.scrollHeight;
     // 判断滚动条是否触底
     if (clientHeight + scrollTop === scrollHeight) {
         isLoading.value = true
