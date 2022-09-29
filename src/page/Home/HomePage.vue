@@ -29,9 +29,11 @@ import recommendedGoodsComp from './HomeComponents/recommendedGoodsComp.vue';
 import ImportantNotesComp from './HomeComponents/ImportantNotesComp.vue'
 import srollSearchComp from './HomeComponents/srollSearchComp.vue';
 import { ref } from '@vue/reactivity';
+import { provide } from '@vue/runtime-core';
 
 // 是否显示滚动搜索栏
-let isShowSearchBox = ref(false)
+let isShowSearchBox = ref<boolean>(false)
+
 
 // 滚动条事件
 window.onscroll = ():void => {

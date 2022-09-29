@@ -12,18 +12,19 @@
             <li>
                 <!-- 账号密码登录表单 -->
                 <div class="password_login_method" v-show="!changeLoginIndex">
-                    <a-form :model="userNmaeAndPassword" name="basic" autocomplete="off" @finish="onPasswordLoginFinish"
-                        @finishFailed="onPasswordLoginFinishFailed">
-                        <a-form-item name="username" :rules="[{ required: true, message: '请输入用户名！！' }]">
-                            <a-input v-model="userNmaeAndPassword.username" size="large" placeholder="账户">
+                    <a-form :model="userNmaeAndPassword" name="basic" autocomplete="off" :rules="rules"
+                        @finish="onPasswordLoginFinish" @finishFailed="onPasswordLoginFinishFailed">
+                        <a-form-item name="username">
+                            <a-input v-model:value="userNmaeAndPassword.username" size="large" placeholder="账户">
                                 <template #prefix>
                                     <idcard-filled />
                                 </template>
                             </a-input>
                         </a-form-item>
 
-                        <a-form-item name="password" :rules="[{ required: true, message: '请输入密码！！' }]">
-                            <a-input-password v-model="userNmaeAndPassword.password" size="large" placeholder="密码">
+                        <a-form-item name="password">
+                            <a-input-password v-model:value="userNmaeAndPassword.password" size="large"
+                                placeholder="密码">
                                 <template #prefix>
                                     <lock-filled />
                                 </template>
@@ -36,18 +37,18 @@
                 </div>
                 <!-- 邮箱登录表单 -->
                 <div class="email_login_method" v-show="changeLoginIndex">
-                    <a-form :model="emailLoginMethod" name="basic" autocomplete="off" @finish="onPasswordLoginFinish"
-                        @finishFailed="onPasswordLoginFinishFailed">
-                        <a-form-item name="email" :rules="[{ required: true, message: '请输入用户名！！' }]">
-                            <a-input v-model="emailLoginMethod.email" size="large" placeholder="邮箱">
+                    <a-form :model="emailLoginMethod" name="basic" autocomplete="off" :rules="rules"
+                        @finish="onPasswordLoginFinish" @finishFailed="onPasswordLoginFinishFailed">
+                        <a-form-item name="email">
+                            <a-input v-model:value="emailLoginMethod.email" size="large" placeholder="邮箱">
                                 <template #prefix>
                                     <mail-outlined />
                                 </template>
-                            </a-input>                        
+                            </a-input>
                         </a-form-item>
 
-                        <a-form-item name="code" :rules="[{ required: true, message: '请输入密码！！' }]">
-                            <a-input v-model="emailLoginMethod.code" size="large" placeholder="验证码">
+                        <a-form-item name="code">
+                            <a-input v-model:value="emailLoginMethod.code" size="large" placeholder="验证码">
                                 <template #prefix>
                                     <safety-certificate-outlined />
                                 </template>
@@ -77,6 +78,7 @@
 import { IdcardFilled, LockFilled, UserSwitchOutlined, MailOutlined, SafetyCertificateOutlined } from '@ant-design/icons-vue';
 import { reactive, ref } from "@vue/reactivity"
 import { message } from 'ant-design-vue';
+import type { Rule } from 'ant-design-vue/es/form';
 
 
 // 登录方式切换
@@ -95,24 +97,24 @@ const userNmaeAndPassword = reactive<userNmaeAndPasswordType>({
     username: '',
     password: ''
 })
-// 密码登录方式完成的方式
-const onPasswordLoginFinish = (values: any) => {
+// 密码登录方式验证成功的方式
+const onPasswordLoginFinish = (values: Object) => {
+    console.log(values);
 
 }
-const onPasswordLoginFinishFailed = (values: any) => {
-
+// 密码登录方式验证错误的方式
+const onPasswordLoginFinishFailed = (values: Object) => {
+    console.log(values);
 }
-
-
 // 邮箱登录类型限制
 interface emailLoginMethodType {
     email: string,
-    code: number
+    code: string
 }
 // 邮箱登录用户信息
 const emailLoginMethod = reactive<emailLoginMethodType>({
     email: '',
-    code: 0
+    code: ''
 })
 // 获取验证码
 const sendcode = ref()
@@ -137,11 +139,80 @@ const getCode = (): void => {
                 codeCountDown.value = 60
                 againClick.value = true
             }
-        }, 1000)        
+        }, 1000)
     } else {
         message.warning('请勿重复发送验证码');
     }
 }
+
+// 登录账号验证
+const usernameValidatePass = async (_rule: Rule, value: string) => {
+    if (value === '') {
+        return Promise.reject('请输入用户名');
+    } else {
+        // 用户名正则验证
+        var reg = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{4,16}$/i
+        if (reg.test(userNmaeAndPassword.username)) {
+            return Promise.resolve();
+        } else {
+            return Promise.reject('请输入4到16位由字母与数字组成的账号');
+        }
+        return Promise.resolve();
+    }
+}
+// 登录密码验证
+const passwordValidatePass = async (_rule: Rule, value: string) => {
+    if (value === '') {
+        return Promise.reject('请输入密码');
+    } else {
+        // 密码正则验证
+        var reg = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{9,16}$/i
+        if (reg.test(userNmaeAndPassword.password)) {
+            return Promise.resolve();
+        } else {
+            return Promise.reject('请输入9到16位由字母与数字组成的密码');
+        }
+        return Promise.resolve();
+    }
+}
+// 邮箱验证
+const emailValidatePass = async (_rule: Rule, value: string) => {
+    if (value === '') {
+        return Promise.reject('请输入邮箱');
+    } else {
+        // 邮箱正则验证
+        var reg = /^\w+@[a-z0-9]+.[a-z]{2,4}$/i
+        if (reg.test(emailLoginMethod.email)) {
+            return Promise.resolve();
+        } else {
+            return Promise.reject('请输入正确的邮箱');
+        }
+        return Promise.resolve();
+    }
+}
+// 验证码验证
+const codeValidatePass = async (_rule: Rule, value: string) => {
+    if (value === '') {
+        return Promise.reject('请输入验证码');
+    } else {
+        // 邮箱正则验证
+        var reg = /[0-9]{6}$/i
+        if (reg.test(emailLoginMethod.code)) {
+            return Promise.resolve();
+        } else {
+            return Promise.reject('验证码为6为数字');
+        }
+        return Promise.resolve();
+    }
+}
+
+// 验证集合
+const rules: Record<string, Rule[]> = {
+    username: [{ required: true, validator: usernameValidatePass, trigger: 'blur' }],
+    password: [{ required: true, validator: passwordValidatePass, trigger: 'blur' }],
+    email: [{ required: true, validator: emailValidatePass, trigger: 'blur' }],
+    code: [{ required: true, validator: codeValidatePass, trigger: 'blur' }],
+};
 
 
 </script>

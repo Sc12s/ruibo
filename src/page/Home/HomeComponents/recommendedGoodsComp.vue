@@ -4,7 +4,7 @@
         <h1>猜你喜欢<span>个性推荐</span></h1>
         <ul class="goods_list">
             <!-- 商品盒子 -->
-            <li v-for="index in 3" :key="index">
+            <li v-for="index in loadingGoodsNums" :key="index">
                 <!-- 商品图片 -->
                 <div class="goods_image">
                     <a-image :width="150" :height="150" src="https://www.antdv.com/#error"
@@ -22,10 +22,46 @@
                 </div>
             </li>
         </ul>
+        <div>
+            <a-spin :spinning="isLoading" />
+        </div>
     </div>
 </template>
 
 <script lang="ts" setup>
+import { ref } from "@vue/reactivity";
+import { computed, inject, watch } from "@vue/runtime-core";
+
+
+// 自定义无限加载
+let loadingGoodsNums = ref<number>(10)
+// 加载动画
+let isLoading = ref<boolean>(false)
+
+// 监听商品总数
+watch(loadingGoodsNums, (newVal): void => {
+    loadingGoodsNums.value = newVal
+})
+
+// 监听滚动条是否触底
+window.onscroll = (): void => {
+    // 获取元素
+    const dom = document.documentElement || document.body
+    // 获取当前可视区域的内容高度
+    const clientHeight = dom.clientHeight;
+    // 滚动条在Y轴上的滚动距离
+    const scrollTop = dom.scrollTop;
+    // 内容可视区域的高度加上溢出（滚动）的距离
+    const scrollHeight = dom.scrollHeight;
+    // 判断滚动条是否触底
+    if (clientHeight + scrollTop === scrollHeight) {
+        isLoading.value = true
+        setTimeout(() => (
+            loadingGoodsNums.value += 5,
+            isLoading.value = false
+        ), 1000)
+    }
+}
 
 </script>
 
@@ -96,9 +132,11 @@
                     font-weight: 500;
                     margin: 0;
                 }
+
                 .goods_title:hover {
                     color: #ff0036;
                 }
+
                 // 送运费险
                 .goods_warning {
                     margin-top: 5px;
@@ -110,11 +148,13 @@
                     border-radius: 3px;
                     font-size: 12px;
                 }
+
                 // 商品价格样式
                 .goods_price {
                     font-size: 24px;
                     color: #ff5000;
                     margin-top: 38px;
+
                     span {
                         font-size: 17px;
                     }

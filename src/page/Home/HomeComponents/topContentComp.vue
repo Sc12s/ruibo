@@ -19,7 +19,9 @@
     <li class="right_box">
       <!-- 右边盒子顶部内容 -->
       <ul class="right_top_nav_box">
-        <li v-for="navinfo in topNavList" :key="navinfo.path">{{ navinfo.title }}</li>
+        <li v-for="navinfo in topNavList" :key="navinfo.path">
+          <router-link :to="navinfo.path">{{ navinfo.title }}</router-link>
+        </li>
       </ul>
       <!-- 右边盒子下部分内容 -->
       <ul class="right_bottom_box">
@@ -139,15 +141,15 @@ const goodsClassifyList = markRaw<goodsClassifyType[]>([
 // 右边顶部列表
 const topNavList = markRaw<topNavType[]>([
   {
-    title: "天猫",
-    path: ''
+    title: "瑞博",
+    path: '/'
   },
   {
     title: "聚划算",
     path: ''
   },
   {
-    title: "天猫超市",
+    title: "瑞博超市",
     path: ''
   },
   {
@@ -168,7 +170,7 @@ const topNavList = markRaw<topNavType[]>([
   },
   {
     title: "直播",
-    path: ''
+    path: '/livePage'
   },
 ])
 
@@ -255,6 +257,10 @@ const topNavList = markRaw<topNavType[]>([
         width: calc(100% / 8);
         text-align: center;
         cursor: pointer;
+
+        a:visited {
+          color: #333333;
+        }
       }
 
       li:nth-child(1),
@@ -264,15 +270,19 @@ const topNavList = markRaw<topNavType[]>([
       }
 
       li:nth-child(3) {
-        color: #33c900;
+        a {
+          color: #33c900;
+        }
       }
 
       li:nth-child(1),
       li:nth-child(2) {
-        color: #ff0036;
+        a {
+          color: #ff0036;
+        }
       }
 
-      li:hover {
+      li:hover a {
         color: #ff0036;
       }
     }
