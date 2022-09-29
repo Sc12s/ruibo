@@ -22,15 +22,16 @@
                 </div>
             </li>
         </ul>
-        <div>
-            <a-spin :spinning="isLoading" />
+        <div class="isLoading_box" v-if="isLoading">
+            <loading-outlined />
         </div>
     </div>
 </template>
 
 <script lang="ts" setup>
 import { ref } from "@vue/reactivity";
-import { computed, inject, watch } from "@vue/runtime-core";
+import { watch } from "@vue/runtime-core";
+import { LoadingOutlined } from '@ant-design/icons-vue';
 
 
 // 自定义无限加载
@@ -171,6 +172,12 @@ window.onscroll = (): void => {
         li:nth-child(3n+2) {
             margin: 0 20px;
         }
+    }
+
+    .isLoading_box {
+        text-align: center;
+        font-size: 35px;
+        color: #ff5000;
     }
 }
 </style>
