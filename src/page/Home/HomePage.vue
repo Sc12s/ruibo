@@ -29,21 +29,28 @@ import recommendedGoodsComp from './HomeComponents/recommendedGoodsComp.vue';
 import ImportantNotesComp from './HomeComponents/ImportantNotesComp.vue'
 import srollSearchComp from './HomeComponents/srollSearchComp.vue';
 import { ref } from '@vue/reactivity';
-import { provide } from '@vue/runtime-core';
 
 // 是否显示滚动搜索栏
 let isShowSearchBox = ref<boolean>(false)
 
-
 // 滚动条事件
-window.onscroll = ():void => {
-    let srollTopNum = window.pageYOffset       
+// window.onscroll = () => {
+//     let srollTopNum = window.pageYOffset
+//     if (srollTopNum > 85) {
+//         isShowSearchBox.value = true
+//     } else {
+//         isShowSearchBox.value = false
+//     }
+// }
+window.addEventListener('scroll', () => {
+    let srollTopNum: number = window.pageYOffset
     if (srollTopNum > 85) {
         isShowSearchBox.value = true
     } else {
         isShowSearchBox.value = false
     }
-}
+})
+
 
 </script>
 

@@ -57,7 +57,7 @@ const navheadList = ref<navHeadListType[]>([
 .nav_top_container {
     width: 100%;
     min-width: 1200px;
-    background-color: #fff;
+    background-color: #f5f5f5;
     height: 35px;
     line-height: 35px;
 
