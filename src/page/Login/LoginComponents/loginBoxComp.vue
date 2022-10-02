@@ -64,10 +64,12 @@
                 </div>
             </li>
             <li>
-                <div>
+                <div @click="changeLoginIndex = 1">
                     <user-switch-outlined /> 邮箱登录
                 </div>
-                <div>免费注册</div>
+                <div>
+                    <router-link to="/registPage">免费注册</router-link>
+                </div>
             </li>
         </ul>
     </div>
@@ -79,7 +81,12 @@ import { IdcardFilled, LockFilled, UserSwitchOutlined, MailOutlined, SafetyCerti
 import { reactive, ref } from "@vue/reactivity"
 import { message } from 'ant-design-vue';
 import type { Rule } from 'ant-design-vue/es/form';
-
+// 登录请求导入
+import { PASSWORD_LOGIN } from '../../../http/api/loginApi'
+// cookie方法导入
+import { setCookie } from '../../../http/CookieOperation';
+// 网络请求导入 
+import { SEND_EMAIL_CODE } from '../../../http/api/emailApi'
 
 // 登录方式切换
 const changeLoginIndex = ref<number>(0)
@@ -99,12 +106,19 @@ const userNmaeAndPassword = reactive<userNmaeAndPasswordType>({
 })
 // 密码登录方式验证成功的方式
 const onPasswordLoginFinish = (values: Object) => {
-    console.log(values);
-
+    PASSWORD_LOGIN(values).then((res: any) => {
+        const { data } = res
+        if (data.status === 'success') {
+            message.success('登录成功')
+            setCookie('token', data.token)
+        } else {
+            message.error('登入失败,请检查账号或者密码')
+        }
+    })
 }
 // 密码登录方式验证错误的方式
 const onPasswordLoginFinishFailed = (values: Object) => {
-    console.log(values);
+    message.success('登入失败,请检查账号或者密码')
 }
 // 邮箱登录类型限制
 interface emailLoginMethodType {
@@ -125,23 +139,34 @@ const codeCountDown = ref<number>(60)
 // 定时器
 let timer: any = null
 // 获取验证码
-const getCode = (): void => {
-    if (againClick.value) {
-        againClick.value = false
-        // 验证码倒计时
-        timer = setInterval(() => {
-            codeCountDown.value--
-            sendcode.value.innerText = codeCountDown.value + 's'
-            // 清除定时器
-            if (codeCountDown.value === 0) {
-                clearInterval(timer)
-                sendcode.value.innerText = "发送验证码"
-                codeCountDown.value = 60
-                againClick.value = true
-            }
-        }, 1000)
+const getCode = async (): Promise<void> => {
+    if (emailLoginMethod.email === '') {
+        message.error('请填写邮箱')
     } else {
-        message.warning('请勿重复发送验证码');
+        // 判断是否重复发送请求
+        if (againClick.value) {
+            againClick.value = false
+            // 发送请求
+            const res = await SEND_EMAIL_CODE({ email: emailLoginMethod.email })
+            if (res.data.status === 'status') {
+                // 验证码倒计时
+                timer = setInterval(() => {
+                    codeCountDown.value--
+                    sendcode.value.innerText = codeCountDown.value + 's'
+                    // 清除定时器
+                    if (codeCountDown.value === 0) {
+                        clearInterval(timer)
+                        sendcode.value.innerText = "发送验证码"
+                        codeCountDown.value = 60
+                        againClick.value = true
+                    }
+                }, 1000)
+            } else {
+                message.error('验证码发送失败请重试')
+            }
+        } else {
+            message.warning('请勿重复发送验证码');
+        }
     }
 }
 
@@ -212,9 +237,7 @@ const rules: Record<string, Rule[]> = {
     password: [{ required: true, validator: passwordValidatePass, trigger: 'blur' }],
     email: [{ required: true, validator: emailValidatePass, trigger: 'blur' }],
     code: [{ required: true, validator: codeValidatePass, trigger: 'blur' }],
-};
-
-
+}
 </script>
 
 <style scoped lang="less">
@@ -284,9 +307,18 @@ const rules: Record<string, Rule[]> = {
         li:nth-child(3) {
             color: #6c6c6c;
 
-            div:hover {
-                color: #ff5000;
+            a {
+                color: #6c6c6c;
                 transition: all .5s;
+            }
+
+            div {
+                transition: all .5s;
+            }
+
+            div:hover,
+            a:hover {
+                color: #ff5000;
             }
 
             div {

@@ -63,7 +63,7 @@ const codeValidatePass = async (_rule: Rule, value: string) => {
         if (reg.test(emailLoginMethod.code)) {
             return Promise.resolve();
         } else {
-            return Promise.reject('验证码为6为数字');
+            return Promise.reject('请输入正确的验证码');
         }
         return Promise.resolve();
     }
@@ -123,9 +123,6 @@ const getCode = async (): Promise<void> => {
             message.warning('请勿重复发送验证码');
         }
     }
-
-
-
 }
 
 // 接收父组件的自定义事件
