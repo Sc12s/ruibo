@@ -35,6 +35,7 @@ import { MailOutlined, SafetyCertificateOutlined } from '@ant-design/icons-vue';
 import { reactive, ref } from "@vue/reactivity"
 import { message } from "ant-design-vue";
 import type { Rule } from 'ant-design-vue/es/form';
+import { SEND_EMAIL_CODE, CHECK_EMAIL_CODE } from '../../../http/api/emailApi'
 
 
 // 邮箱验证
@@ -93,31 +94,52 @@ const codeCountDown = ref<number>(60)
 // 定时器
 let timer: any = null
 // 获取验证码
-const getCode = (): void => {
-    if (againClick.value) {
-        againClick.value = false
-        // 验证码倒计时
-        timer = setInterval(() => {
-            codeCountDown.value--
-            sendcode.value.innerText = codeCountDown.value + 's'
-            // 清除定时器
-            if (codeCountDown.value === 0) {
-                clearInterval(timer)
-                sendcode.value.innerText = "发送验证码"
-                codeCountDown.value = 60
-                againClick.value = true
-            }
-        }, 1000)
+const getCode = async (): Promise<void> => {
+    if (emailLoginMethod.email === '') {
+        message.error('请填写邮箱')
     } else {
-        message.warning('请勿重复发送验证码');
+        // 判断是否重复发送请求
+        if (againClick.value) {
+            againClick.value = false
+            // 发送请求
+            const res = await SEND_EMAIL_CODE({ email: emailLoginMethod.email })
+            if (res.data.status === 'status') {
+                // 验证码倒计时
+                timer = setInterval(() => {
+                    codeCountDown.value--
+                    sendcode.value.innerText = codeCountDown.value + 's'
+                    // 清除定时器
+                    if (codeCountDown.value === 0) {
+                        clearInterval(timer)
+                        sendcode.value.innerText = "发送验证码"
+                        codeCountDown.value = 60
+                        againClick.value = true
+                    }
+                }, 1000)
+            } else {
+                message.error('验证码发送失败请重试')
+            }
+        } else {
+            message.warning('请勿重复发送验证码');
+        }
     }
+
+
+
 }
 
 // 接收父组件的自定义事件
 const emit = defineEmits(['click'])
 
-const onPasswordLoginFinish = (value: any): void => {
-    emit('click', value.email)
+const onPasswordLoginFinish = async (values: any): Promise<void> => {
+    const { email, code } = values
+    const res = await CHECK_EMAIL_CODE({ email, code })
+    if (res.data.status === 'success') {
+        clearTimeout(timer)
+        emit('click', values.email)
+    } else  {
+        message.error(res.data.message)
+    }
 }
 
 const onPasswordLoginFinishFailed = (): void => {

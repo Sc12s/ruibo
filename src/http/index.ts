@@ -13,7 +13,7 @@ const serviceAxios = axios.create({
 })
 
 // 请求拦截
-serviceAxios.interceptors.request.use((config) => {
+serviceAxios.interceptors.request.use((config: any) => {
     nprogress.start()
     // 是否开启token认证
     if (serverConfig.useTokenAuthorization && config.url !== '/userip/saveuserip') {
@@ -36,7 +36,7 @@ serviceAxios.interceptors.request.use((config) => {
 
 
 // 响应拦截
-serviceAxios.interceptors.response.use((config) => {
+serviceAxios.interceptors.response.use((config: any) => {
     nprogress.done();
     config.isLoading = false
     // 处理自己的业务逻辑，比如判断 token 是否过期等等

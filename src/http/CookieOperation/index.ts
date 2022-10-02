@@ -1,15 +1,15 @@
-import Cookies from "js-cookie";
+import Cookies from 'js-cookie'
 
-const getCookie = (val) => {
+const getCookie = (val: string) => {
     return Cookies.get(val)
 }
 
-const setCookie = (val, token) => {
+const setCookie = (val: string, token: string) => {
     // 名字 token 限制时间
     return Cookies.set(val, token, { expires: 3 })
 }
 
-const removeCookie = (val) => {
+const removeCookie = (val: string) => {
     return Cookies.remove(val)
 }
 

@@ -19,7 +19,6 @@ import personalInfoComp from './registComponents/personalInfoComp.vue';
 import registHead from './registComponents/registHead.vue';
 // 邮件发送请求
 
-
 // 显示第几步
 const index = ref<number>(0)
 // 邮箱
