@@ -2,18 +2,34 @@
   <ul class="user_container">
     <!-- 用户名和头像框盒子 -->
     <li>
-      <a-avatar :size="64">
+      <!-- 没登录显示 -->
+      <a-avatar :size="64" v-if="!tokenStatus">
         <template #icon>
           <UserOutlined />
         </template>
       </a-avatar>
-      <p>Hi！你好</p>
+      <!-- 登录后显示 -->
+      <a-avatar :src="userInfo.avater" :size="64" v-else />
+      <p v-if="!tokenStatus">Hi！你好</p>
+      <p v-else>{{ userInfo.username }}</p>
     </li>
+    
     <!-- 按钮 -->
-    <li>
+    <li v-if="!tokenStatus">
       <router-link to="/loginPage">登录</router-link>
       <router-link to="/registPage">注册</router-link>
       <router-link to="/">开店</router-link>
+    </li>
+    <li v-else>
+      <span>
+        个人中心
+      </span>
+      <span>
+        购物车
+      </span>
+      <span>
+        待发货
+      </span>
     </li>
     <!-- 发货等图标 -->
     <li>
@@ -54,8 +70,13 @@
 </template>
 
 <script lang="ts" setup>
-import { UserOutlined } from '@ant-design/icons-vue';
+import { UserOutlined, TeamOutlined } from '@ant-design/icons-vue';
 import { ref } from '@vue/reactivity';
+import { storeToRefs } from 'pinia';
+// pinia导入
+import { GlobalStore } from '../../../store/index'
+const store = GlobalStore()
+const { userInfo, tokenStatus, uuid } = storeToRefs<any>(store)
 
 interface newsListType {
   tag: string
@@ -109,6 +130,23 @@ const newsList = ref<newsListType[]>([
   // 按钮盒子
   li:nth-child(2) {
     flex: 2;
+
+    span {
+      display: inline-block;
+      width: calc(285px / 3);
+      height: 100%;
+      line-height: 50px;
+      text-align: center;
+      color: #ff5000;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all .5s;
+    }
+
+    span:hover {
+      color: blanchedalmond;
+    }
 
     a {
       color: #fff;
