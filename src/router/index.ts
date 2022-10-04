@@ -1,4 +1,8 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
+import nprogress from 'nprogress'
+import 'nprogress/nprogress.css'
+import { validLogin } from './methods/validationLogin'
+
 
 const routes: RouteRecordRaw[] = [
     {
@@ -34,6 +38,23 @@ const routes: RouteRecordRaw[] = [
 const router = createRouter({
     history: createWebHashHistory(),
     routes
+})
+
+router.beforeEach((to, from, next) => {
+    // 加载条
+    nprogress.start()
+    if (to.name === 'LoginPage' || to.name === 'registPage' || to.name === 'HomePage') {
+        return next()
+    } else {
+        // 判断是否登录
+        validLogin(next)
+    }
+})
+
+
+
+router.afterEach(()=>{
+    nprogress.done();
 })
 
 export default router

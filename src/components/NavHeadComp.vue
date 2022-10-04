@@ -1,11 +1,29 @@
 <template>
     <div class="nav_top_container">
         <ul>
-            <span>
-                <li v-for="value, index in navheadList.slice(0, 2)" :key="value.path">
-                    {{ value.title }}
+            <!-- 左边盒子 -->
+            <span v-if="tokenStatus">
+                <!-- 邮箱框 -->
+                <a-popover placement="bottom">
+                    <template #content>
+                        <div style="text-align:center">
+                            <a-avatar size="large" :src="userInfo.avater"></a-avatar>
+                            <div style="margin-top: 10px">{{ userInfo.username }}</div>
+                            <a-button type="link" danger @click="signOut">退出登录</a-button>
+                        </div>
+                    </template>
+                    <template #title>
+                        <span>个人信息</span>
+                    </template>
+                    <div class="username_box">欢迎！用户：{{ userInfo.username }}</div>
+                </a-popover>
+            </span>
+            <span v-else>
+                <li v-for="value in navheadList.slice(0, 2)" :key="value.path">
+                    <router-link :to="value.path">{{ value.title }}</router-link>
                 </li>
             </span>
+            <!-- 右边盒子 -->
             <span>
                 <li v-for="value, index in navheadList.slice(2, navheadList.length)" :key="value.path">
                     {{ value.title }}
@@ -17,20 +35,33 @@
 
 <script lang="ts" setup>
 import { ref } from "@vue/reactivity";
+import { onMounted } from "@vue/runtime-core";
+import { message } from "ant-design-vue";
+import { storeToRefs } from "pinia";
+import { removeCookie } from "../http/CookieOperation";
+// pinia方法 
+import { GlobalStore } from '../store/index'
+// 退出登录方法
+import { SIGN_OUT_ACCOUNT } from '../http/api/loginApi'
+// 实例化GlobalStore
+const store = GlobalStore()
+const { userInfo, tokenStatus, uuid } = storeToRefs<any>(store)
+
 
 interface navHeadListType {
     title: string,
     path: string,
 }
 
+
 const navheadList = ref<navHeadListType[]>([
     {
         title: '亲，请登录',
-        path: ''
+        path: '/loginPage'
     },
     {
         title: '免费注册',
-        path: ''
+        path: '/registPage'
     },
     {
         title: '个人中心',
@@ -49,6 +80,24 @@ const navheadList = ref<navHeadListType[]>([
         path: ''
     },
 ])
+
+// 退出登录
+const signOut = () => {
+    SIGN_OUT_ACCOUNT({ key: uuid.value }).then((res: any) => {
+        if (res.data.status === 'success') {
+            removeCookie('token')
+            store.$reset();
+            message.success('退出登录成功')
+        } else {
+            message.error('退出登录失败')
+        }
+    })
+}
+
+
+onMounted(() => {
+    store.validationToken()
+})
 
 </script>
 
@@ -73,13 +122,23 @@ const navheadList = ref<navHeadListType[]>([
         span {
             display: flex;
 
+            .username_box {
+                color: #6c6c6c;
+                cursor: pointer;
+            }
+
             li {
                 margin: 0 10px;
                 cursor: pointer;
                 color: #6c6c6c;
+
+                a {
+                    color: #6c6c6c;
+                }
             }
 
-            li:hover {
+            li:hover,
+            a:hover {
                 color: #F22E00;
                 text-decoration: underline;
                 transition: all .3s;

@@ -10,8 +10,11 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue-demi';
+import { useRouter } from 'vue-router';
 import loginBoxComp from './LoginComponents/loginBoxComp.vue';
 import loginNavHead from './LoginComponents/loginNavHead.vue';
+
 
 </script>
 
@@ -22,6 +25,7 @@ import loginNavHead from './LoginComponents/loginNavHead.vue';
     min-width: 1200px;
     border-bottom: 1px solid #f5f5f5;
 }
+
 .login_box {
     width: 100%;
     min-width: 1200px;

@@ -87,9 +87,13 @@ import { PASSWORD_LOGIN } from '../../../http/api/loginApi'
 import { setCookie } from '../../../http/CookieOperation';
 // 网络请求导入 
 import { SEND_EMAIL_CODE } from '../../../http/api/emailApi'
+import { useRouter } from 'vue-router';
 
 // 登录方式切换
 const changeLoginIndex = ref<number>(0)
+
+// 路由实例化
+const router = useRouter()
 
 const changeLoginMethods = (index: number): void => {
     changeLoginIndex.value = index
@@ -111,6 +115,8 @@ const onPasswordLoginFinish = (values: Object) => {
         if (data.status === 'success') {
             message.success('登录成功')
             setCookie('token', data.token)
+            // 跳转回上个界面
+            router.go(-1)
         } else {
             message.error('登入失败,请检查账号或者密码')
         }
@@ -118,7 +124,7 @@ const onPasswordLoginFinish = (values: Object) => {
 }
 // 密码登录方式验证错误的方式
 const onPasswordLoginFinishFailed = (values: Object) => {
-    message.success('登入失败,请检查账号或者密码')
+    message.error('登入失败,请检查账号或者密码')
 }
 // 邮箱登录类型限制
 interface emailLoginMethodType {
