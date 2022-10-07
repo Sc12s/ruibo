@@ -4,7 +4,7 @@
         <h1>猜你喜欢<span>个性推荐</span></h1>
         <ul class="goods_list">
             <!-- 商品盒子 -->
-            <li v-for="item in loadingGoodsNums" :key="item.goods_id">
+            <li v-for="item in loadingGoodsNums" :key="item.goods_id" @click="skipGoods(item.goods_id)">
                 <!-- 商品图片 -->
                 <div class="goods_image">
                     <a-image :width="150" :height="150" :src="item.goods_image" :preview="false"
@@ -35,6 +35,7 @@ import { onMounted, watch } from "@vue/runtime-core";
 import { LoadingOutlined } from '@ant-design/icons-vue';
 import { GOODS_LIST } from "../../../http/api/goodsApi";
 import { message } from "ant-design-vue";
+import { useRouter } from "vue-router";
 
 
 // 自定义无限加载
@@ -87,6 +88,20 @@ const REMM_GOODS = async () => {
     } else {
         message.error('请求错误，请重试！！！')
     }
+}
+
+// 路由实例化
+const router = useRouter()
+
+// 跳转商品详情
+const skipGoods = (id: string) => {
+    const link = router.resolve({
+        name: 'GoodsDetailsPage',
+        params: {
+            id
+        }
+    })
+    window.open(link.href, '_blank')
 }
 
 onMounted(() => {

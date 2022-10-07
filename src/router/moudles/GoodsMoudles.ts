@@ -1,9 +1,8 @@
-import { RouteRecordRaw } from "vue-router";
-import RouterConfig from "../methods/RouterConfig";
+// import RouterConfig from "../methods/RouterConfig";
 
-const GoodsRouter: RouterConfig[] = [
+const GoodsRouter = [
     {
-        path: '/goodsDetailsPage',
+        path: '/goodsDetailsPage/:id',
         name: 'GoodsDetailsPage',
         component: () => import('../../page/Goods/goodsDetails/GoodsDetailsPage.vue')
     }

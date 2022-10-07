@@ -8,6 +8,15 @@ const GOODS_LIST = (params:any): any => {
     })
 }
 
+const GOODS_DETAILS = (params:any): any => {    
+    return serviceAxios({
+        method: 'get',
+        url: '/singleGoodsSearch',
+        params
+    })
+}
+
 export {
-    GOODS_LIST
+    GOODS_LIST,
+    GOODS_DETAILS
 }

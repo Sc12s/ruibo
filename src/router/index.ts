@@ -2,6 +2,8 @@ import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
 import nprogress from 'nprogress'
 import 'nprogress/nprogress.css'
 import { validLogin } from './methods/validationLogin'
+// 货物路由导入
+import GoodsRouter from './moudles/GoodsMoudles'
 
 
 const routes: RouteRecordRaw[] = [
@@ -32,7 +34,9 @@ const routes: RouteRecordRaw[] = [
         path: '/livePage',
         name: 'LivePage',
         component: () => import('../page/Live/LivePage.vue')
-    }
+    },
+    // 货物路由
+    ...GoodsRouter
 ]
 
 const router = createRouter({
