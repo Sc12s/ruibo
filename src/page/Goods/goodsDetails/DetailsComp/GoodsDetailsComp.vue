@@ -49,7 +49,8 @@
             <!-- 参数选择 -->
             <ul class="goods_size">
                 <span>分类：</span>
-                <li v-for="size, index in JSON.parse(details.goods_size)" :key="index" @click="selectSize(index, size)" :class="selectDefault===index && 'selectAfterSize'">{{ size }}</li>
+                <li v-for="size, index in JSON.parse(details.goods_size)" :key="index" @click="selectSize(index, size)"
+                    :class="selectDefault===index && 'selectAfterSize'">{{ size }}</li>
             </ul>
             <!-- 标签 -->
             <div class="goods_tags">
@@ -72,10 +73,13 @@
 
 <script lang="ts" setup>
 import { message } from "ant-design-vue";
-import { reactive, ref } from "vue-demi";
+import { reactive, ref, toRefs } from "vue-demi";
+import { ADD_GOODS_CAR } from "../../../../http/api/goodsApi";
 // pinia导入
-import { GlobalStore } from '../../../../store/index';
+import { GlobalStore, GoodsCarStore } from '../../../../store/index';
+// 全局方法实例化
 const store: any = GlobalStore()
+const { uuid } = toRefs(store)
 
 // 接收父组件传过来的值
 const props = defineProps({
@@ -99,20 +103,34 @@ const buy_goods_info = reactive({
     goods_image: details.value.goods_image,
     goods_title: details.value.goods_title,
     goods_price: details.value.goods_price,
+    goods_merchants: details.value.goods_merchants,
     goods_size: '',
     goods_nums: 1
 })
 
 // 默认选择
-const selectDefault = ref(0)
+const selectDefault = ref<number | null>(null)
 
 // 选择商品参数
-const selectSize = (index:number, size:string) => {
+const selectSize = (index: number, size: string) => {
     selectDefault.value = index
     buy_goods_info.goods_size = size
 }
 
+// 添加购物车网络请求
+const addGoodsCarHttp = async () => {
+
+
+    const userGoodsCarId = 'goodsCar' + uuid.value
+    const res = await ADD_GOODS_CAR({
+        goodsCarId: userGoodsCarId,
+        goodsInfo: JSON.stringify(buy_goods_info)
+    })
+}
+
+// 添加购物车
 const add_goods_car = () => {
+    addGoodsCarHttp()
     message.success('加入购物车成功')
 }
 

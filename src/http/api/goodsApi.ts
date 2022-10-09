@@ -1,5 +1,6 @@
 import serviceAxios from '../index'
 
+// 商品信息
 const GOODS_LIST = (params:any): any => {    
     return serviceAxios({
         method: 'get',
@@ -8,6 +9,7 @@ const GOODS_LIST = (params:any): any => {
     })
 }
 
+// 单个商品查询
 const GOODS_DETAILS = (params:any): any => {    
     return serviceAxios({
         method: 'get',
@@ -16,7 +18,17 @@ const GOODS_DETAILS = (params:any): any => {
     })
 }
 
+// 加入购物车
+const ADD_GOODS_CAR = (data: any): any => {
+    return serviceAxios({
+        method: 'post',
+        url: '/addGoodsCar',
+        data
+    })
+}
+
 export {
     GOODS_LIST,
-    GOODS_DETAILS
+    GOODS_DETAILS,
+    ADD_GOODS_CAR
 }

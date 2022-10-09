@@ -23,11 +23,31 @@ export const GlobalStore = defineStore('GlobalStore', {
             if (res.data.status === 'error') {
                 this.tokenStatus = false
                 return false
-            }         
+            }
             this.uuid = res.data.tokenInfo.uuid
             this.tokenStatus = true
-            this.userInfo = { ...res.data.tokenInfo }   
-            return true         
+            this.userInfo = { ...res.data.tokenInfo }
+            return true
         }
+    }
+})
+
+
+// 购物车方法
+export const GoodsCarStore = defineStore('GoodsCarStore', {
+    state: () => {
+        return {
+            goodsList: [] as Object[]
+        }
+    },
+    getters: {
+        newGoodsList(state){
+            console.log('123123123');
+            
+            return state
+        }
+    },
+    actions: {
+
     }
 })

@@ -44,7 +44,7 @@
 // 图标导入
 import '../../Home/HomeComponents/icon/alibaba/icon.css'
 import { message } from "ant-design-vue";
-import { defineAsyncComponent, nextTick, onMounted, reactive, ref, toRefs } from "vue-demi";
+import { defineAsyncComponent, onMounted, reactive } from "vue-demi";
 import { useRoute, useRouter } from "vue-router";
 import NavHeadComp from "../../../components/NavHeadComp.vue";
 import { GOODS_DETAILS } from "../../../http/api/goodsApi";
@@ -56,15 +56,10 @@ const GoodsCommentComp = defineAsyncComponent(() => import('./DetailsComp/goodsC
 
 // 实例化路由
 const route = useRoute()
-const router = useRouter()
 const goods_id = route.params.id
 
 // 商品详情
 const goods_details = reactive<any>({})
-
-// 店铺名
-// const { goods_merchants } = toRefs(goods_details.value)
-
 
 
 // 根据goods_id查询商品
