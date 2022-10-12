@@ -85,7 +85,7 @@ onMounted(() => {
 <style lang="less" scoped>
 .goods_content_box {
     background: rgb(233, 222, 216);
-
+    padding-bottom: 24px;
     .store_name_box {
         width: 1200px;
         height: 80px;

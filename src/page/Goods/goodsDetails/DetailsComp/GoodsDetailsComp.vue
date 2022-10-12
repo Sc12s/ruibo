@@ -76,7 +76,7 @@ import { message } from "ant-design-vue";
 import { reactive, ref, toRefs } from "vue-demi";
 import { ADD_GOODS_CAR } from "../../../../http/api/goodsApi";
 // pinia导入
-import { GlobalStore, GoodsCarStore } from '../../../../store/index';
+import { GlobalStore } from '../../../../store/index';
 // 全局方法实例化
 const store: any = GlobalStore()
 const { uuid } = toRefs(store)
@@ -118,20 +118,21 @@ const selectSize = (index: number, size: string) => {
 }
 
 // 添加购物车网络请求
-const addGoodsCarHttp = async () => {
-
-
-    const userGoodsCarId = 'goodsCar' + uuid.value
-    const res = await ADD_GOODS_CAR({
+const addGoodsCarHttp = async () => {  
+    const userGoodsCarId = uuid.value
+    const { data } = await ADD_GOODS_CAR({
         goodsCarId: userGoodsCarId,
         goodsInfo: JSON.stringify(buy_goods_info)
     })
+    if (data.status === 'error') {
+        return message.error(data.message)
+    }
+    message.success(data.message)
 }
 
 // 添加购物车
 const add_goods_car = () => {
     addGoodsCarHttp()
-    message.success('加入购物车成功')
 }
 
 </script>
