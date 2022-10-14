@@ -12,6 +12,12 @@ const GoodsRouter = [
         path: '/goodsCarPage',
         name: 'GoodsCarPage',
         component: () => import('../../page/Goods/goodsCar/GoodsCarPage.vue')
+    },
+    // 货物搜索
+    {
+        path: '/goodsSearchPage',
+        name: 'GoodsSearchPage',
+        component: () => import('../../page/Goods/goodsSearch/GoodsSearchPage.vue')
     }
 ]
 

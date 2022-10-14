@@ -25,8 +25,8 @@
             </span>
             <!-- 右边盒子 -->
             <span>
-                <li v-for="value, index in navheadList.slice(2, navheadList.length)" :key="value.path">
-                    {{ value.title }}
+                <li v-for="value in navheadList.slice(2, navheadList.length)" :key="value.path">
+                    <router-link :to="value.path">{{ value.title }}</router-link>
                 </li>
             </span>
         </ul>
@@ -64,12 +64,16 @@ const navheadList = ref<navHeadListType[]>([
         path: '/registPage'
     },
     {
+        title: '瑞博首页',
+        path: '/'
+    },
+    {
         title: '个人中心',
         path: ''
     },
     {
         title: '购物车',
-        path: ''
+        path: '/goodsCarPage'
     },
     {
         title: '商品分类',

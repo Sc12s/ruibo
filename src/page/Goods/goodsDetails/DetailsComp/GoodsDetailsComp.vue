@@ -132,7 +132,11 @@ const addGoodsCarHttp = async () => {
 
 // 添加购物车
 const add_goods_car = () => {
-    addGoodsCarHttp()
+    if (buy_goods_info.goods_size === '') {
+        message.error('加入购物车失败,请选择商品分类')
+    } else {
+        addGoodsCarHttp()
+    }
 }
 
 </script>

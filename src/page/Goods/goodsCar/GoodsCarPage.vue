@@ -6,11 +6,12 @@
         <div class="goods_list_box">
             <div class="car_title">
                 <span>购物车（全部{{ newGoodsNums }}件）</span>
-                <span>已选商品（含运费） 0.00 <a-button type="primary" danger shape="round">结算</a-button></span>
+                <span>已选商品（含运费）<span>{{ selectGoodsPrice }}</span>元<a-button type="primary" danger shape="round">结算
+                    </a-button></span>
             </div>
             <ul class="goods_list">
                 <div class="title">
-                    <span>全选</span>
+                    <span @click="allSelect">全选/反选</span>
                     <span>商品信息</span>
                     <span>单价</span>
                     <span>数量</span>
@@ -21,30 +22,35 @@
                     <a-empty description="您的购物车为空,请添加将您喜欢的商品加入购物车" />
                 </template>
                 <template v-else>
-                    <li v-for="item, index in newGoodsData" :key="index">
-                        <div class="store_name"><span>店铺：</span>{{ index }}</div>
-                        <div class="goods_info_box">
-                            <a-checkbox-group v-model:value="selectValue">
+                    <a-checkbox-group v-model:value="selectValue" @change="selectGoodsChange">
+                        <li v-for="item, keys in newGoodsData" :key="keys">
+                            <div class="store_name"><span>店铺：</span>{{ keys }}</div>
+                            <div class="goods_info_box">
                                 <a-checkbox v-for="val, index in item" :key="index" :value="val">
                                     <div class="goods_box">
                                         <!-- 商品图片 -->
                                         <div class="goods_image_box">
                                             <img :src="val.goods_image" alt="商品图片" />
                                         </div>
+                                        <!-- 商品信息 -->
                                         <div class="goods_title_box">{{ val.goods_title }}</div>
                                         <div class="goods_size_box">商品分类：{{ val.goods_size }}</div>
                                         <div class="goods_price_box">￥{{ val.goods_price }}</div>
                                         <div class="goods_nums_box">数量：{{val.goods_nums}}</div>
                                         <div class="goods_all_price_box">￥{{ val.goods_all_price }}</div>
+                                        <!-- 操作按钮 -->
                                         <div class="goods_operation_box">
                                             <a-button type="link">修改</a-button>
-                                            <a-button type="link">删除</a-button>
+                                            <a-popconfirm title="是否删除当前商品?" ok-text="确定删除"
+                                                cancel-text="取消" @confirm="confirmDele(keys, val)">
+                                                <a-button type="link">删除</a-button>
+                                            </a-popconfirm>
                                         </div>
                                     </div>
                                 </a-checkbox>
-                            </a-checkbox-group>
-                        </div>
-                    </li>
+                            </div>
+                        </li>
+                    </a-checkbox-group>
                 </template>
             </ul>
         </div>
@@ -57,7 +63,7 @@ import { computed, onMounted, reactive, ref, toRefs } from 'vue-demi';
 import { GET_GOODS_CAR_LIST } from '../../../http/api/goodsApi';
 import { GlobalStore } from '../../../store';
 import NavHead from '../../../components/NavHeadComp.vue'
-import GoodsCarSearchComp from './GoodsCarSearchComp.vue';
+import GoodsCarSearchComp from './goodsCarComp/GoodsCarSearchComp.vue';
 import { message } from 'ant-design-vue';
 
 
@@ -65,19 +71,27 @@ import { message } from 'ant-design-vue';
 const store: any = GlobalStore()
 const { uuid } = toRefs(store)
 let goods_data = reactive<any>({})
-// 选择那些值
-let selectValue = ref([])
+// 选择那些商品
+let selectValue = ref<object[]>([])
 
+// 删除单件商品
+const confirmDele = (keysNmae: number, value: object) => {
+    goods_data.value[keysNmae].forEach((item: object, index: number) => {
+        if (JSON.stringify(item) === JSON.stringify(value)) {
+            goods_data.value[keysNmae].splice(index, 1)
+        }
+    })
+}
 
 // 获取购物车列表信息
 const getGoodsCarList = async () => {
     const { data } = await GET_GOODS_CAR_LIST({ uuid: uuid.value })
     if (data.status === 'success') {
         goods_data.value = data.message
+        console.log(data.message);
     } else {
         message.error('获取购物车信息失败,请重试!!')
     }
-
 }
 
 // 计算每件商品的总价
@@ -85,7 +99,7 @@ const newGoodsData = computed(() => {
     let goodsList = goods_data.value
     for (const key in goodsList) {
         goodsList[key].forEach((item: any) => {
-            item.goods_all_price = item.goods_nums * item.goods_price
+            item.goods_all_price = (item.goods_nums * item.goods_price).toFixed(2)
         })
     }
     return goodsList
@@ -103,7 +117,38 @@ const newGoodsNums = computed(() => {
     return nums
 })
 
-// 计算商品的总价
+
+// 选中商品后改变
+const selectGoodsChange = () => {
+}
+// 计算选中商品的总价
+const selectGoodsPrice = computed(() => {
+    let gdsPrice = 0
+    selectValue.value.map((item: any) => {
+        gdsPrice = gdsPrice + (item.goods_nums * item.goods_price)
+    })
+    return gdsPrice.toFixed(2)
+})
+
+// 全选按钮
+// 统计点击次数
+let clickNums: number = 0
+const allSelect = () => {
+    selectValue.value = []
+    clickNums++
+    // 反选
+    if (clickNums % 2 == 0) {
+        selectValue.value = []
+        return;
+    }
+    // 全选
+    const keysArr = Object.keys(goods_data.value)
+    keysArr.map((item: string) => {
+        goods_data.value[item].map((val: any) => {
+            selectValue.value.push(val)
+        })
+    })
+}
 
 onMounted(() => {
     getGoodsCarList()
@@ -135,6 +180,8 @@ onMounted(() => {
 
             span:nth-child(1) {
                 width: 114px;
+                color: #ff5000;
+                cursor: pointer;
             }
 
             span:nth-child(2) {
@@ -180,6 +227,12 @@ onMounted(() => {
             }
 
             span:nth-child(2) {
+                span {
+                    color: #ff5000;
+                    font-weight: 700;
+                    font-size: 20px;
+                }
+
                 .ant-btn {
                     margin-left: 10px;
                 }
@@ -191,27 +244,27 @@ onMounted(() => {
             padding: 18px;
             margin: 0;
 
-            // 商品框
-            li {
+            .ant-checkbox-group {
+                width: 100%;
 
-                // 店铺名字
-                .store_name {
-                    span {
-                        color: black;
+                // 商品框
+                li {
+
+                    // 店铺名字
+                    .store_name {
+                        span {
+                            color: black;
+                        }
+
+                        color: #3c3c3c;
                     }
 
-                    color: #3c3c3c;
-                }
-
-                // 商品具体信息框
-                .goods_info_box {
-                    margin: 14px 0;
-                    border-radius: 24px;
-                    background: #f7f9fa;
-                    padding: 10px;
-
-                    .ant-checkbox-group {
-                        width: 100%;
+                    // 商品具体信息框
+                    .goods_info_box {
+                        margin: 14px 0;
+                        border-radius: 24px;
+                        background: #f7f9fa;
+                        padding: 10px;
 
                         .ant-checkbox-wrapper {
                             width: 100%;

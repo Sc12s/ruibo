@@ -36,9 +36,19 @@ const GET_GOODS_CAR_LIST = (data: any): any => {
     })
 }
 
+// 商品搜索
+const SEARCH_GOODS = (params: any): any => {
+    return serviceAxios({
+        method: 'get',
+        url: '/searchGoods',
+        params
+    })
+}
+
 export {
     GOODS_LIST,
     GOODS_DETAILS,
     ADD_GOODS_CAR,
-    GET_GOODS_CAR_LIST
+    GET_GOODS_CAR_LIST,
+    SEARCH_GOODS
 }

@@ -47,6 +47,7 @@
     .search_box {
         width: 650px;
         padding-top: 34px;
+
         .search_container {
             width: 650px;
             border: 2px solid #FF5000;
@@ -77,6 +78,7 @@
                 cursor: pointer;
             }
         }
+
         .search_history {
             color: #666666;
             font-size: 12px;
