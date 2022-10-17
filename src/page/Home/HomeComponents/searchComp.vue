@@ -14,7 +14,22 @@
         <div class="search_button_box" @click="searchGoods">搜索</div>
       </div>
       <!-- 搜索历史 -->
-      <div class="search_history"><ul v-if="searchHistoryArr.length !== 0">搜索历史：<li v-for="val, index in searchHistoryArr" :key="index">{{ val }}&nbsp</li></ul>
+      <div class="search_history">
+        <ul v-if="searchHistoryArr.length !== 0">
+          搜索历史：
+          <li v-for="(val, index) in searchHistoryArr" :key="index">
+            <router-link
+              :to="{
+                path: '/goodsSearchPage',
+                query: {
+                  searchType: '宝贝',
+                  searchInfo: val,
+                },
+              }"
+              >{{ val }}</router-link
+            >
+          </li>
+        </ul>
       </div>
     </div>
     <!-- 网站二维码 -->
@@ -55,16 +70,26 @@ const searchHistory = (): void => {
   const history: any = localStorage.getItem("searchHistory");
   const historyArr: any = JSON.parse(history);
   if (history === null) {
-    localStorage.setItem("searchHistory", "[]");
-    searchHistoryArr.value = []
+    localStorage.setItem("searchHistory", `[${searchGoodsInfo.value}]`);
+    searchHistoryArr.value = [searchGoodsInfo.value];
     return;
   } else if (searchGoodsInfo.value !== "") {
     // 添加搜索记录
-    searchHistoryArr.value.push(searchGoodsInfo.value)
-    historyArr.unshift(searchGoodsInfo.value);
+    // const historyIndex = searchHistoryArr.value.findIndex(item => item === searchGoodsInfo.value)
+    // searchHistoryArr.value.unshift(searchGoodsInfo.value)
+    // 查找历史记录是否已经存在
+    const index = historyArr.findIndex( (item: any) => item === searchGoodsInfo.value );
+    if (index !== -1) {
+      historyArr.splice(index, 1);
+      historyArr.unshift(searchGoodsInfo.value);
+      console.log(historyArr);
+    } else {
+      historyArr.unshift(searchGoodsInfo.value);
+    }
+    // 添加到local中
     localStorage.setItem("searchHistory", JSON.stringify(historyArr));
   } else {
-    searchHistoryArr.value = historyArr
+    searchHistoryArr.value = historyArr;
   }
 };
 
@@ -145,6 +170,16 @@ onMounted((): void => {
         padding: 0;
         margin: 0;
         display: flex;
+        li {
+          margin: 0 5px;
+          a {
+            color: #666666;
+          }
+        }
+        li:hover a {
+          color: #ff5000;
+          text-decoration: underline;
+        }
       }
     }
   }

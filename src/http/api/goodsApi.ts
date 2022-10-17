@@ -45,10 +45,39 @@ const SEARCH_GOODS = (params: any): any => {
     })
 }
 
+// 随机推荐9条数据
+const RAND_REMM_GOODS = (): any => {
+    return serviceAxios({
+        method: 'get',
+        url: '/remmGoods'
+    })
+}
+
+// 添加浏览历史记录
+const ADD_BROWING_HISTORY = (data: any): any => {
+    return serviceAxios({
+        method: 'post',
+        url: '/addBrowingHistory',
+        data
+    })
+}
+
+// 读取浏览历史
+const GET_BROWING_HISTORY = (params: any): any => {
+    return serviceAxios({
+        method: 'get',
+        url: '/getBrowingHistory',
+        params
+    })
+}
+
 export {
     GOODS_LIST,
     GOODS_DETAILS,
     ADD_GOODS_CAR,
     GET_GOODS_CAR_LIST,
-    SEARCH_GOODS
+    SEARCH_GOODS,
+    RAND_REMM_GOODS,
+    ADD_BROWING_HISTORY,
+    GET_BROWING_HISTORY
 }

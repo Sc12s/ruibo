@@ -82,7 +82,6 @@ const searchGoods = (): void => {
   // searchType: string, searchInfo: string
   searchTypeRef.value = searchType;
   searchInfoRef.value = searchInfo;
-  console.log(searchType, searchInfo);
   searchGoodsHttp();
 };
 

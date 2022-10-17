@@ -13,23 +13,21 @@
       <p v-if="!tokenStatus">Hi！你好</p>
       <p v-else>{{ userInfo.username }}</p>
     </li>
-    
+
     <!-- 按钮 -->
-    <li v-if="!tokenStatus">
+    <li v-if="!tokenStatus" class="login_regist_box">
       <router-link to="/loginPage">登录</router-link>
       <router-link to="/registPage">注册</router-link>
       <router-link to="/">开店</router-link>
     </li>
-    <li v-else>
+    <li class="user_go_center" v-else>
       <span>
-        个人中心
+        <router-link to="/customerPage">个人中心</router-link>
       </span>
       <span>
-        购物车
+        <router-link to="/goodsCarPage">购物车</router-link>
       </span>
-      <span>
-        待发货
-      </span>
+      <span> 待发货 </span>
     </li>
     <!-- 发货等图标 -->
     <li>
@@ -52,7 +50,7 @@
         </router-link>
       </div>
       <div>
-        <router-link to="/">
+        <router-link to="/customerPage/personalHomePage/browingHistoryPage">
           <i class="iconfont icon-zuji"></i>
           <span>我的足迹</span>
         </router-link>
@@ -70,33 +68,32 @@
 </template>
 
 <script lang="ts" setup>
-import { UserOutlined, TeamOutlined } from '@ant-design/icons-vue';
-import { ref } from '@vue/reactivity';
-import { storeToRefs } from 'pinia';
+import { UserOutlined, TeamOutlined } from "@ant-design/icons-vue";
+import { ref } from "@vue/reactivity";
+import { storeToRefs } from "pinia";
 // pinia导入
-import { GlobalStore } from '../../../store/index'
-const store = GlobalStore()
-const { userInfo, tokenStatus, uuid } = storeToRefs<any>(store)
+import { GlobalStore } from "../../../store/index";
+const store = GlobalStore();
+const { userInfo, tokenStatus, uuid } = storeToRefs<any>(store);
 
 interface newsListType {
-  tag: string
-  title: string
-  path: string
+  tag: string;
+  title: string;
+  path: string;
 }
 
 const newsList = ref<newsListType[]>([
   {
-    tag: '规则',
-    title: '关于地区发货问题',
-    path: '/'
+    tag: "规则",
+    title: "关于地区发货问题",
+    path: "/",
   },
   {
-    tag: '热点',
-    title: '关于用户注册的一些问题',
-    path: '/'
+    tag: "热点",
+    title: "关于用户注册的一些问题",
+    path: "/",
   },
-])
-
+]);
 </script>
 
 <style lang="less" scoped>
@@ -128,7 +125,7 @@ const newsList = ref<newsListType[]>([
   }
 
   // 按钮盒子
-  li:nth-child(2) {
+  .login_regist_box {
     flex: 2;
 
     span {
@@ -141,13 +138,8 @@ const newsList = ref<newsListType[]>([
       font-size: 15px;
       font-weight: 700;
       cursor: pointer;
-      transition: all .5s;
+      transition: all 0.5s;
     }
-
-    span:hover {
-      color: blanchedalmond;
-    }
-
     a {
       color: #fff;
       display: inline-block;
@@ -174,7 +166,22 @@ const newsList = ref<newsListType[]>([
       border: 1px solid #ff6000;
     }
   }
-
+  .user_go_center {
+    color: #ff5000;
+    font-weight: 700;
+    display: flex;
+    span {
+      flex: 1;
+      text-align: center;
+      cursor: pointer;
+      a {
+        color: #ff5000;
+      }
+    }
+    span:hover a {
+      color: blanchedalmond;
+    }
+  }
   // 店铺收藏等
   li:nth-child(3) {
     flex: 3;

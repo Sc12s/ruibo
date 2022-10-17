@@ -4,6 +4,7 @@ import 'nprogress/nprogress.css'
 import { validLogin } from './methods/validationLogin'
 // 货物路由导入
 import GoodsRouter from './moudles/GoodsMoudles'
+import usersRouter from './moudles/usersMoudles'
 
 
 const routes: RouteRecordRaw[] = [
@@ -36,7 +37,9 @@ const routes: RouteRecordRaw[] = [
         component: () => import('../page/Live/LivePage.vue')
     },
     // 货物路由
-    ...GoodsRouter
+    ...GoodsRouter,
+    // 用户中心路由
+    ...usersRouter
 ]
 
 const router = createRouter({
@@ -47,7 +50,7 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
     // 加载条
     nprogress.start()
-    if (to.name === 'LoginPage' || to.name === 'registPage' || to.name === 'HomePage') {
+    if (to.name === 'LoginPage' || to.name === 'RegistPage' || to.name === 'HomePage') {
         return next()
     } else {
         // 判断是否登录

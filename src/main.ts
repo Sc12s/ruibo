@@ -7,6 +7,8 @@ import 'ant-design-vue/dist/antd.css';
 import vueRouter from '../src/router'
 // 全局css导入
 import './global/global.less'
+// animate.css导入
+import 'animate.css'
 // pinia导入
 import { createPinia } from 'pinia';
 const pinia = createPinia()

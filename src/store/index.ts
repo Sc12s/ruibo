@@ -33,21 +33,23 @@ export const GlobalStore = defineStore('GlobalStore', {
 })
 
 
-// 购物车方法
-export const GoodsCarStore = defineStore('GoodsCarStore', {
-    state: () => {
-        return {
-            goodsList: [] as Object[]
-        }
-    },
-    getters: {
-        newGoodsList(state){
-            console.log('123123123');
+// export const BrowingHistory = defineStore('BrowingHistory', {
+//     state: () => {
+//         return {
+//             // 存储浏览历史
+//             historyList: [] as any
+//         }
+//     },
+//     getters: {
+//         getBrowingHistory: (state) => {
             
-            return state
-        }
-    },
-    actions: {
-
-    }
-})
+//             // return state.historyList
+//         }
+//     },
+//     actions: {
+//         // 将数据存入历史列表中
+//         setBrowingHistroy(history:any) {
+//             this.historyList.push(history)
+//         }
+//     }
+// })

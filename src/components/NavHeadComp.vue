@@ -43,10 +43,12 @@ import { removeCookie } from "../http/CookieOperation";
 import { GlobalStore } from '../store/index'
 // 退出登录方法
 import { SIGN_OUT_ACCOUNT } from '../http/api/loginApi'
+import { useRouter } from "vue-router";
 // 实例化GlobalStore
 const store = GlobalStore()
 const { userInfo, tokenStatus, uuid } = storeToRefs<any>(store)
-
+// 路由方法实例化
+const router = useRouter()
 
 interface navHeadListType {
     title: string,
@@ -69,7 +71,7 @@ const navheadList = ref<navHeadListType[]>([
     },
     {
         title: '个人中心',
-        path: ''
+        path: '/customerPage'
     },
     {
         title: '购物车',
@@ -86,11 +88,13 @@ const navheadList = ref<navHeadListType[]>([
 ])
 
 // 退出登录
+
 const signOut = () => {
     SIGN_OUT_ACCOUNT({ key: uuid.value }).then((res: any) => {
         if (res.data.status === 'success') {
             removeCookie('token')
             store.$reset();
+            router.push('/')
             message.success('退出登录成功')
         } else {
             message.error('退出登录失败')

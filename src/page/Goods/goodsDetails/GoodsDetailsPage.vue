@@ -45,9 +45,12 @@
 import '../../Home/HomeComponents/icon/alibaba/icon.css'
 import { message } from "ant-design-vue";
 import { defineAsyncComponent, onMounted, reactive } from "vue-demi";
-import { useRoute, useRouter } from "vue-router";
+import { useRoute } from "vue-router";
 import NavHeadComp from "../../../components/NavHeadComp.vue";
-import { GOODS_DETAILS } from "../../../http/api/goodsApi";
+import { GOODS_DETAILS, ADD_BROWING_HISTORY } from "../../../http/api/goodsApi";
+// pinia导入
+import { GlobalStore } from '../../../store/index'
+import { storeToRefs } from 'pinia';
 // 异步加载货物详情组件
 // import GoodsDetailsComp from './DetailsComp/GoodsDetailsComp.vue'
 const GoodsDetailsComp = defineAsyncComponent(() => import('./DetailsComp/GoodsDetailsComp.vue'));
@@ -58,9 +61,12 @@ const GoodsCommentComp = defineAsyncComponent(() => import('./DetailsComp/goodsC
 const route = useRoute()
 const goods_id = route.params.id
 
+// 实例化pinia
+const store = GlobalStore()
+const { userInfo } = storeToRefs<any>(store)
+
 // 商品详情
 const goods_details = reactive<any>({})
-
 
 // 根据goods_id查询商品
 const goodsDetails = async () => {
@@ -69,9 +75,17 @@ const goodsDetails = async () => {
         goods_details.value = { ...data.goodsdatils }
         // 修改状态栏标题
         document.title = goods_details.value.goods_title
+        addBrowingHistory(goods_details.value)
     } else {
         message.error('发生未知错误，请重试！')
     }
+}
+
+// 添加历史方法
+const addBrowingHistory = (values: any) => {
+    let uuid = userInfo.value.uuid
+    let history = JSON.stringify(values)
+    ADD_BROWING_HISTORY({ history, saveKey: uuid })
 }
 
 onMounted(() => {
