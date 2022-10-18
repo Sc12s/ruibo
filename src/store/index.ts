@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { getCookie } from '../http/CookieOperation'
 // 请求导入
 import { VALIDATION_TOKEN } from '../http/api/loginApi'
+import { SET_ADDRESS } from '../http/api/accountApi'
 
 // cookie/token方法
 export const GlobalStore = defineStore('GlobalStore', {
@@ -9,8 +10,8 @@ export const GlobalStore = defineStore('GlobalStore', {
         return {
             token: getCookie('token'),
             // 判断token状态
-            tokenStatus: false,
-            userInfo: {},
+            tokenStatus: false as boolean,
+            userInfo: {} as any,
             uuid: ''
         }
     },

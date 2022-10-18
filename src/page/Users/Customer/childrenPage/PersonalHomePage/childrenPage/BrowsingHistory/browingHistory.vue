@@ -1,17 +1,22 @@
 <template>
   <div class="history_main_box">
     <div class="title">浏览历史</div>
-    <ul>
-      <li v-for="item in historyArr" @click="toGoGoods(item.goods_id)">
-        <div class="goods_img">
-          <img :src="item.goods_image" alt="商品图片" />
-        </div>
-        <div class="goodsName_price">
-          <h3>{{ item.goods_price }}</h3>
-          <p>{{ item.goods_title }}</p>
-        </div>
-      </li>
-    </ul>
+    <template v-if="historyArr.length !== 0">
+      <ul>
+        <li v-for="item in historyArr" @click="toGoGoods(item.goods_id)">
+          <div class="goods_img">
+            <img :src="item.goods_image" alt="商品图片" />
+          </div>
+          <div class="goodsName_price">
+            <h3>{{ item.goods_price }}</h3>
+            <p>{{ item.goods_title }}</p>
+          </div>
+        </li>
+      </ul>
+    </template>
+    <template v-else>
+      <div class="noHistroy">暂无浏览历史</div>
+    </template>
   </div>
 </template>
 
@@ -117,6 +122,11 @@ onMounted((): void => {
     li:hover p {
       color: #ff4000;
     }
+  }
+  .noHistroy {
+    background: #fff;
+    padding: 15px 0;
+    text-align: center;
   }
 }
 </style>

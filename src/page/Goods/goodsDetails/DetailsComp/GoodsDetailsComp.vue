@@ -46,10 +46,7 @@
       <!-- 配送地址 -->
       <div class="user_address">
         <div>
-          <span>配送：</span>
-          {{
-            store.userInfo.address ? store.userInfo.address : "请填写收获地址"
-          }}
+          <span>配送：</span>{{store.userInfo.address ? JSON.parse(store.userInfo.address).address : "请填写收获地址"}}
         </div>
         <div>快递：免运费</div>
       </div>
@@ -83,7 +80,7 @@
           :min="1"
           :max="details.goods_nums * 1"
         >
-        </a-input-number>
+        </a-input-number> 件
       </div>
       <ul class="goods_btns">
         <li>购买商品</li>
